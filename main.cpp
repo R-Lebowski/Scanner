@@ -2,10 +2,11 @@
  * main.cpp
  *
  * Version:
- *          0.01.5
+ *          0.01.6
  *
  * Previous Versions:
  *
+ * 2010-10-04: 0.01.5
  * 2010-09-29: 0.01.1
  * 2010-09-28: 0.00.5
  */
@@ -71,18 +72,8 @@ int main(int argc, char *argv[])
         {
             fName = argv[1];
         }
-    }
-    catch (int e)
-    {
-        cerr << "An exception occured in program: " << argv[0]
-                <<  endl << "Error No. " << e << endl;
-        exit( 1 );
-    }
 
-    /* Check file:
-            Throw exception if fails to open */
-    try
-    {
+
         ifstream inputFile;     //Data file
         inputFile.open( fName );
 
@@ -123,6 +114,15 @@ int main(int argc, char *argv[])
     {
         cerr << "An exception occured in program: " << argv[0]
                 <<  endl << "Error No. " << e << endl;
+
+        if( e == 101 )
+        {
+            cerr << "Improper command line arguments" << endl;
+        }
+        else if( e == 102 )
+        {
+            cerr << "File could not be found/opened" << endl;
+        }
 
         exit( 1 );
     }
