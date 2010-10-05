@@ -2,11 +2,10 @@
  * main.cpp
  *
  * Version:
- *          0.01.6
+ *          0.01.5
  *
  * Previous Versions:
  *
- * 2010-10-04: 0.01.5
  * 2010-09-29: 0.01.1
  * 2010-09-28: 0.00.5
  */
@@ -72,64 +71,84 @@ int main(int argc, char *argv[])
         {
             fName = argv[1];
         }
-
-
-        ifstream inputFile;     //Data file
-        inputFile.open( fName );
-
-        /*
-         * 2010-09-28: To do here:
-         *              Enter a loop;
-         *                  Read in one line per loop,
-         *                  Pass that line into parse method,
-         *                  Parse method will generate the tokens and
-         *                      add them to their proper arrays.
-         *              End of file, exit the loop
-         */
-        if( inputFile.is_open() )
-        {
-            string line;      //Holds a single line of the input file
-
-            cout << "File stream has opened..." << endl;
-
-            cout << "Tokenizer activated for:" << endl;
-            while( !inputFile.eof() )
-            {
-                curLine++;
-
-                getline(inputFile, line);
-
-                tokenizer( line, curLine );
-            }
-
-            inputFile.close();
-            cout << "File stream closed..." << endl;
-        }
-        else
-        {
-            throw 102;      //Error 102, File not opened
-        }
     }
     catch (int e)
     {
         cerr << "An exception occured in program: " << argv[0]
                 <<  endl << "Error No. " << e << endl;
-
-        if( e == 101 )
-        {
-            cerr << "Improper command line arguments" << endl;
-        }
-        else if( e == 102 )
-        {
-            cerr << "File could not be found/opened" << endl;
-        }
-
         exit( 1 );
     }
 
-    cout << "Scanner deactivated..." << endl;
-    return 0;
-}
+    /* Check file:
+            Throw exception if fails to open */
+    try
+      {
+          if( argc != 2 )
+          {
+              throw 101; //Exception 101, command line arguments not proper
+          }
+         else if( argc == 2 )
+          {
+              fName = argv[1];
+          }
+
+
+          ifstream inputFile; //Data file
+          inputFile.open( fName );
+
+          /*
+           * 2010-09-28: To do here:
+           * Enter a loop;
+           * Read in one line per loop,
+           * Pass that line into parse method,
+           * Parse method will generate the tokens and
+           * add them to their proper arrays.
+           * End of file, exit the loop
+           */
+          if( inputFile.is_open() )
+          {
+              string line; //Holds a single line of the input file
+
+              cout << "File stream has opened..." << endl;
+
+              cout << "Tokenizer activated for:" << endl;
+              while( !inputFile.eof() )
+              {
+                  curLine++;
+
+                  getline(inputFile, line);
+
+                  tokenizer( line, curLine );
+              }
+
+              inputFile.close();
+              cout << "File stream closed..." << endl;
+          }
+          else
+          {
+              throw 102; //Error 102, File not opened
+          }
+      }
+      catch (int e)
+      {
+          cerr << "An exception occured in program: " << argv[0]
+                  << endl << "Error No. " << e << endl;
+
+          if( e == 101 )
+          {
+              cerr << "Improper command line arguments" << endl;
+          }
+          else if( e == 102 )
+          {
+              cerr << "File could not be found/opened" << endl;
+          }
+
+          exit( 1 );
+      }
+
+      cout << "Scanner deactivated..." << endl;
+      return 0;
+  }
 
 /**
   * Tokenizer:
@@ -160,32 +179,32 @@ void tokenizer( string xLine, int lineNum )
      */
     cout << "Entering line " << lineNum << "..." << endl;
 
-    int charMax= 50, curSize = 0, strMax = 10;
-    string word;                //String to hold a single word at a time
-    string * strArray = new string[strMax];
-    char ch;                     //Char to split the word with
-    char * charArray = new char[charMax];       //Single character array
+    int charSize = 50, strSize = 10, curSize = 0;
+    string str;
+    string * strArray = new string[strSize];
+    char ch;                     //Char to split the string with
+    char * charArray = new char[charSize];       //Single character array
 
     istringstream iss(xLine, istringstream::in);
 
-    while( iss >> word )
+    /* Split the line into single words */
+    while( iss >> str )
     {
-        if( curSize >= strMax )
+        if( curSize >= strSize )
         {
-            //realloc the array, double the maxSize;
+            strSize = strSize * 2;
+            strArray = (string *)realloc( strArray, strSize);
         }
 
-        strArray[curSize] = word;
+        strArray[curSize] = str;
         curSize++;
     }
 
-    for( int i = 0; i <= curSize-2; i++)
+    for( int i = 0; i < curSize; i++)
     {
         cout << strArray[i] << endl;
     }
-
-    //delete charArray;
-    //delete strArray;
+    delete strArray;
 
     cout << "Leaving line " << lineNum << "..." << endl;
 }
