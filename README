@@ -1,3 +1,6 @@
+2010-10-05: Updating to version 0.01.9
+		1. Changed Tokenizer to split lines by words instead of chars
+		2. Laid groundwork to create the transition array
 2010-10-04: Currently at version 0.01.6
 2010-10-04: Added version 0.01.5 to github
 
